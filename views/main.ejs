@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인페이지</title>
+    <script>
+        function add() {
+            location.href = "/board/add";
+        }
+    </script>
+</head>
+<body>
+    <h1>게시판</h1>
+    <table border="1">
+        <tr>
+            <th>글  번호</th>
+            <th>글  제목</th>
+            <th>작 성 자</th>
+        </tr>
+        <%if(list.length == 0) {%>
+        <tr>
+            <td colspan="3">
+                게시글이 존재하지 않습니다.
+            </td>    
+        </tr>    
+        <%} else {%>
+            <%list.forEach(function(board){%>
+                <tr>
+                    <td><%=board.No%></td>
+                    <td><%=board.Title%></td>
+                    <td><%=board.Writer%></td>
+                </tr>
+            <%})%>
+        <%} %>    
+    </table>
+    <br>
+    <button onclick="add()">글 작성</button>
+</body>
+</html>
