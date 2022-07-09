@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>글 수정 페이지</h1>
+    <form action="/board/modify" method="post">
+        <label>제목:</label>
+        <input type="text" name="_title" value="<%=modify[0].Title%>"><br>
+        <label>내용:</label>
+        <textarea name="_content" value="<%=modify[0].Content%>"></textarea><br>
+        <label>작성자:</label>
+        <input type="text" name="_writer" value="<%=modify[0].Writer%>"><br>
+        <input type="hidden" name="_no" value="<%=modify[0].No%>"><br>
+        <input type="submit" value="글 수정">
+    </form>
+</body>
+</html>

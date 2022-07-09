@@ -9,6 +9,10 @@
         function add() {
             location.href = "/board/add";
         }
+        
+        function detail(_no) {
+            location.href = "/board/detail?_no=" + _no;
+        }
     </script>
 </head>
 <body>
@@ -27,7 +31,7 @@
         </tr>    
         <%} else {%>
             <%list.forEach(function(board){%>
-                <tr>
+                <tr onclick="detail('<%=board.No%>')">
                     <td><%=board.No%></td>
                     <td><%=board.Title%></td>
                     <td><%=board.Writer%></td>

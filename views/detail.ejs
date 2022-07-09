@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세페이지</title>
+    <script>
+        function golist(){
+            location.href = "/board";
+        }
+
+        function modify(_no) {
+            location.href = "/board/modify?_no=" + _no;
+        }
+    
+        function erase(_no) {
+            let result = confirm(_no + "번 글을 삭제하시겠습니까?");
+            if(result) {
+                location.href = "/board/delete?_no=" + _no;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>상세 페이지</h1>
+    <table border="1">
+        <tr>
+            <th>글번호</th>
+            <td><%=detail[0].No%></td>
+        </tr>
+        <tr>
+            <th>글제목</th>
+            <td><%=detail[0].Title%></td>
+        </tr>
+        <tr>
+            <th>글내용</th>
+            <td><%=detail[0].Content%></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td><%=detail[0].Writer%></td>
+        </tr>
+    </table>
+    <br>
+    <button onclick="golist()">목록으로</button>
+    <button onclick="modify('<%=detail[0].No%>')">글 수정</button>
+    <button onclick="erase('<%=detail[0].No%>')">글 삭제</button>
+</body>
+</html>

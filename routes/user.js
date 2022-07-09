@@ -1,7 +1,5 @@
 const router = require("express").Router();
 
-// 물어보기 js 안붙여도 되는데 왜 되는건가?
-// module.exports? 문데
 const conn = require("../db/database");
 
 router.post("/", function(req, res){
