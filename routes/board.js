@@ -10,8 +10,10 @@ router.get("/", function(req, res){
                 console.log(err);
                 res.send("SQL Error");
             }else{
+                console.log("이거 무슨값 : " + req.session.user)
                 res.render("main.ejs", {
-                    list : result
+                    list : result,
+                    user : req.session.user
                 });
             }
         }
@@ -19,7 +21,11 @@ router.get("/", function(req, res){
 });
 
 router.get("/add", function(req, res){
-    res.render("add.ejs");
+    if(req.session.user !== undefined) {
+        res.render("add.ejs");
+    } else {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
+    }
 });
 
 router.post("/add", function(req, res){
@@ -41,62 +47,74 @@ router.post("/add", function(req, res){
 });
 
 router.get("/detail", function(req, res){
-    let update_no = req.query._no;
-
-    conn.query(
-        `select * from board where No = ?`,
-        [update_no],
-        function(err, result){
-            if(err){
-                console.log(err);
-                res.redirect("/board");
-            }else{
-                res.render("detail.ejs", 
-                    {
-                        detail : result
-                    }
-                );
+    if(req.session.user === undefined) {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
+    } else {
+        let update_no = req.query._no;
+    
+        conn.query(
+            `select * from board where No = ?`,
+            [update_no],
+            function(err, result){
+                if(err){
+                    console.log(err);
+                    res.redirect("/board");
+                }else{
+                    res.render("detail.ejs", 
+                        {
+                            detail : result
+                        }
+                    );
+                }
             }
-        }
-    )
+        )
+    }
 });
 
 router.get("/delete", function(req, res){
-    let update_no = req.query._no;
-
-    conn.query(
-        `delete from board where No = ?`,
-        [update_no],
-        function(err){
-            if(err){
-                console.log(err);
-                res.redirect("/board");
-            }else{
-                res.redirect("/board");
+    if(req.session.user === undefined) {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
+    } else {
+        let update_no = req.query._no;
+    
+        conn.query(
+            `delete from board where No = ?`,
+            [update_no],
+            function(err){
+                if(err){
+                    console.log(err);
+                    res.redirect("/board");
+                }else{
+                    res.redirect("/board");
+                }
             }
-        }
-    )
+        )
+    }
 });
 
 router.get("/modify", function(req, res){
-    let update_no = req.query._no;
-
-    conn.query(
-        `select * from board where No = ?`,
-        [update_no],
-        function(err, result){
-            if(err){
-                console.log(err);
-                res.redirect("/board");
-            }else{
-                res.render("modify.ejs", 
-                    {
-                        modify : result
-                    }
-                );
+    if(req.session.user === undefined) {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
+    } else {
+        let update_no = req.query._no;
+    
+        conn.query(
+            `select * from board where No = ?`,
+            [update_no],
+            function(err, result){
+                if(err){
+                    console.log(err);
+                    res.redirect("/board");
+                }else{
+                    res.render("modify.ejs", 
+                        {
+                            modify : result
+                        }
+                    );
+                }
             }
-        }
-    )
+        )
+    }
 });
 
 router.post("/modify", function(req, res){

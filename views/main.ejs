@@ -13,9 +13,29 @@
         function detail(_no) {
             location.href = "/board/detail?_no=" + _no;
         }
+
+        function signup(){
+            location.href = "/login/signup";
+        }
+
+        function login(){
+            location.href = "/login";
+        }
+        function logout(){
+            location.href = "/login/logout";
+        }
     </script>
 </head>
 <body>
+    <%if(user == "undefined" || user == "" || user == null){%>
+        <button onclick="login()">로그인</button>
+        <button onclick="signup()">회원가입</button>
+    <%} else {%>
+        <p>
+            <%=user %> 님 반갑습니다.
+            <button onclick="logout()">로그아웃</button>
+        </p>
+    <%}%>
     <h1>게시판</h1>
     <table border="1">
         <tr>
