@@ -14,10 +14,9 @@ router.post("/", function(req, res){
                 console.log(err);
                 res.send("SQL Error");
             }else{
-                if(req.session.user === undefined) {
+                if(result.length > 0) {
                     req.session.user = result[0].user_id;
                     // req.session.isLogined = true;
-                    console.log("로그인 후 세션 : " + JSON.stringify(req.session.user));
                     res.redirect("/board");
                 } else {
                     res.redirect("/login");
@@ -28,18 +27,18 @@ router.post("/", function(req, res){
 });
 
 router.get("/", function(req, res){
-    if(req.session.user === undefined) {
-        res.render("login.ejs");
-    } else {
+    if(req.session.user) {
         res.redirect("/board");
+    } else {
+        res.render("login.ejs");
     }
 });
 
 router.get("/signup", function(req, res){
-    if(req.session.user === undefined) {
-        res.render("signup.ejs");
-    } else {
+    if(req.session.user) {
         res.redirect("/board");
+    } else {
+        res.render("signup.ejs");
     }
 });
 

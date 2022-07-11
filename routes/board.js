@@ -3,25 +3,28 @@ const router = require("express").Router();
 const conn = require("../db/database");
 
 router.get("/", function(req, res){
-    conn.query(
-        `select * from board order by No desc`,
-        function(err, result){
-            if(err){
-                console.log(err);
-                res.send("SQL Error");
-            }else{
-                console.log("이거 무슨값 : " + req.session.user)
-                res.render("main.ejs", {
-                    list : result,
-                    user : req.session.user
-                });
+    if(req.session.user){
+        conn.query(
+            `select * from board order by No desc`,
+            function(err, result){
+                if(err){
+                    console.log(err);
+                    res.send("SQL Error");
+                }else{
+                    res.render("main.ejs", {
+                        list : result,
+                        user : req.session.user
+                    });
+                }
             }
-        }
-    )
+        )
+    } else {
+        res.redirect("/login");
+    }
 });
 
 router.get("/add", function(req, res){
-    if(req.session.user !== undefined) {
+    if(req.session.user) {
         res.render("add.ejs");
     } else {
         res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
@@ -47,9 +50,7 @@ router.post("/add", function(req, res){
 });
 
 router.get("/detail", function(req, res){
-    if(req.session.user === undefined) {
-        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
-    } else {
+    if(req.session.user) {
         let update_no = req.query._no;
     
         conn.query(
@@ -68,13 +69,13 @@ router.get("/detail", function(req, res){
                 }
             }
         )
+    } else {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
     }
 });
 
 router.get("/delete", function(req, res){
-    if(req.session.user === undefined) {
-        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
-    } else {
+    if(req.session.user) {
         let update_no = req.query._no;
     
         conn.query(
@@ -89,13 +90,13 @@ router.get("/delete", function(req, res){
                 }
             }
         )
+    } else {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
     }
 });
 
 router.get("/modify", function(req, res){
-    if(req.session.user === undefined) {
-        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
-    } else {
+    if(req.session.user) {
         let update_no = req.query._no;
     
         conn.query(
@@ -114,6 +115,8 @@ router.get("/modify", function(req, res){
                 }
             }
         )
+    } else {
+        res.send("<script>alert('로그인 후 이용이 가능합니다.');location.href='/login';</script>");
     }
 });
 
