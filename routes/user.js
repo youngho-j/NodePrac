@@ -1,22 +1,23 @@
 const router = require("express").Router();
 
 const conn = require("../db/database");
+const bcrypt = require("bcryptjs");
 
 router.post("/", function(req, res){
-    var input_id = req.body._id;
-    var input_pass = req.body._pass;
+    let input_id = req.body._id;
+    let input_pass = req.body._pass;
 
     conn.query(
-        `select * from user_info where user_id = ? and user_pass = ?`,
-        [input_id, input_pass],
+        `select * from user_info where user_id = ?`,
+        [input_id],
         function(err, result){
             if(err){
                 console.log(err);
                 res.send("SQL Error");
             }else{
-                if(result.length > 0) {
+                const same = bcrypt.compareSync(input_pass, result[0].user_pass);
+                if(same) {
                     req.session.user = result[0].user_id;
-                    // req.session.isLogined = true;
                     res.redirect("/board");
                 } else {
                     res.redirect("/login");
@@ -43,12 +44,15 @@ router.get("/signup", function(req, res){
 });
 
 router.post("/signup", function(req, res){
-    var input_id = req.body._id;
-    var input_pass = req.body._pass;
+    let encrypted_pass;
+    let input_id = req.body._id;
+    let input_pass = req.body._pass;
+
+    encrypted_pass = bcrypt.hashSync(input_pass, 10);
 
     conn.query(
         `insert into user_info values(?, ?)`,
-        [input_id, input_pass],
+        [input_id, encrypted_pass],
         function(err, result){
             if(err){
                 console.log(err);

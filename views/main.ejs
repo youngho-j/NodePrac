@@ -14,10 +14,6 @@
             location.href = "/board/detail?_no=" + _no;
         }
 
-        function signup(){
-            location.href = "/login/signup";
-        }
-
         function login(){
             location.href = "/login";
         }
@@ -29,7 +25,6 @@
 <body>
     <%if(user == "undefined" || user == "" || user == null){%>
         <button onclick="login()">로그인</button>
-        <button onclick="signup()">회원가입</button>
     <%} else {%>
         <p>
             <%=user %> 님 반갑습니다.
