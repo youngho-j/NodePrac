@@ -18,6 +18,16 @@ router.post("/", function(req, res){
                 const same = bcrypt.compareSync(input_pass, result[0].user_pass);
                 if(same) {
                     req.session.user = result[0].user_id;
+                    console.log("쿠키 값 : " + JSON.stringify(req.session.cookie));
+                    console.log("세션 id 값 : " + req.session.id);
+                    console.log("user id 값 : " + req.session.user);
+                    // redisClient.get('user', (err, val) => {
+                    //     if(err) {
+                    //         console.log(err);
+                    //     } else {
+                    //         console.log("값 : " + val);
+                    //     }
+                    // });
                     res.redirect("/board");
                 } else {
                     res.redirect("/login");

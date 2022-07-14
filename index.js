@@ -1,7 +1,10 @@
 const express = require("express");
 const session = require("express-session");
 const env = require("dotenv").config();
-const MemoryStore = require("memorystore")(session);
+// const MemoryStore = require("memorystore")(session);
+const redisStore = require("connect-redis")(session);
+
+const redisClient = require("./db/redis");
 const user = require("./routes/user");
 const board = require("./routes/board");
 
@@ -12,10 +15,15 @@ app.use(
     {
       secret: process.env.secret,
       resave: false,
-      saveUninitialized : true,
-      store : new MemoryStore({checkPeriod: process.env.maxAge})
+      saveUninitialized : false,
+      // store : new MemoryStore({checkPeriod: process.env.maxAge})
+      store : new redisStore({client:redisClient, prefix:'session:'}),
+      cookie : {
+        httpOnly:true,
+        maxAge : 60*60*24
+      }
     }
-  )
+  ) 
 );
 
 app.set("views", __dirname + "/views");
