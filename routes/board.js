@@ -3,18 +3,67 @@ const router = require("express").Router();
 const conn = require("../db/database");
 
 router.get("/", function(req, res){
+    let sql = "select * from board order by No desc"
     if(req.session.user){
         conn.query(
-            `select * from board order by No desc`,
+            sql,
             function(err, result){
                 if(err){
                     console.log(err);
                     res.send("SQL Error");
                 }else{
-                    res.render("main.ejs", {
-                        list : result,
-                        user : req.session.user
-                    });
+                    if(result.length > 0) {
+                        let pageNum = req.query.page;
+                        const viewPerPage = 3;
+                        const pageGroup = 5;
+                        let totalCount = result.length;
+                        let offset;
+                        
+                        if(pageNum == "" || pageNum == undefined || pageNum <= 0) {
+                            pageNum = 1;
+                        }
+                        
+                        const totalPageGroup = Math.ceil(totalCount / viewPerPage);
+                        const curPageGroup = Math.ceil(pageNum / pageGroup);
+                        const firstPageInGroup = pageNum - (pageNum - 1) % pageGroup;
+                        const lastPageInGroup = firstPageInGroup + (pageGroup - 1);
+                        
+                        if(pageNum < 0) {
+                            offset = 0;
+                        } else {
+                            offset = (pageNum - 1) * viewPerPage;
+                        }
+
+                        const pagingData = {
+                            "pageNum": pageNum,
+                            "totalPageGroup": totalPageGroup,
+                            "firstPageInGroup": firstPageInGroup,
+                            "lastPageInGroup": lastPageInGroup
+                        };
+
+                        sql += " limit " + offset + "," + viewPerPage + "";
+                        console.log("쿼리문 : " + sql);
+                        conn.query(
+                            sql,
+                            (err, result2) => {
+                                if(err) {
+                                    console.log(err);
+                                    res.send("SQL Error");
+                                } else {
+                                    res.render("main.ejs", {
+                                        list : result2,
+                                        user : req.session.user,
+                                        pagingData : pagingData
+                                    });
+                                }
+                            } 
+                        )
+                    } else {
+                        res.render("main.ejs", {
+                            list : result,
+                            user : req.session.user
+                        });
+                    }
                 }
             }
         )

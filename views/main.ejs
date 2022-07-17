@@ -54,6 +54,34 @@
             <%})%>
         <%} %>    
     </table>
+    <div id="paging">
+        <%
+            let pageNum = Number(pagingData.pageNum);
+        %>
+        <%  if(pageNum > 1){ %>
+                <span>
+                    <a href="/board?page=<%=(pageNum - 1)%>">이전</a>
+                </span>
+        <%  } %>
+
+        <%  for(let i = pagingData.firstPageInGroup; i <= pagingData.lastPageInGroup; i++){ 
+                if(i > pagingData.totalPageGroup){
+                    break;
+                }
+                if(i == pageNum){
+        %>
+                    <span><a href="/board?page=<%= i %>" style="color: green; text-decoration: none;"><%= i %></a></span>
+            <%  } else {  %>
+                    <span><a href="/board?page=<%= i %>"><%= i %></a></span>
+            <%  }  %>
+        <%  } %>
+                
+        <% if(pageNum < pagingData.totalPageGroup){ %>    
+                <span>
+                    <a href="/board?page=<%=(pageNum + 1)%>">다음</a>
+                </span>
+        <%  }  %>
+    </div>
     <br>
     <button onclick="add()">글 작성</button>
 </body>
